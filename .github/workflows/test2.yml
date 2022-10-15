@@ -30,6 +30,8 @@ jobs:
     runs-on:  ubuntu-latest
 
     steps:
+      - name: Display structure of downloaded files
+        run: ls -R
 
       # To have access to CHANGELOG.md and tags
       - name: "Checkout local repository"

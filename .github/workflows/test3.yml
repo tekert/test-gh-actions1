@@ -37,6 +37,9 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
 
+      - name: Display structure of downloaded files
+        run: ls -R
+
       # https://github.com/actions/checkout
       - name: "Clone formatter_server repository"
         uses: actions/checkout@v3
