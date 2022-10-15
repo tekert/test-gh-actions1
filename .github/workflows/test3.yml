@@ -39,8 +39,8 @@ jobs:
 
       - name: Display structure of downloaded files
         run: |
-          cd ..
           ls -R
+        working-directory: "."
 
       # https://github.com/actions/checkout
       - name: "Clone formatter_server repository"
