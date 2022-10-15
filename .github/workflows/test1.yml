@@ -11,12 +11,31 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
 
+  build1:
+    uses: ./.github/workflows/test3.yml
+    with:
+      target: last-release
+    secrets:
+      GH_PAT: ${{ secrets.GH_PAT }}
+
   build:
+    needs: [build1]
+    if: needs.build1.outputs.status == 'success'
 
     runs-on:  ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+
+      # Download artifact
+      - name: "Download build artifacts"
+        uses: actions/download-artifact@v3
+        with:
+          name: native-executables
+
+      - name: Display structure of downloaded files
+        run: ls -R
+
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       # https://github.com/actions/checkout
       - name: "Checkout local repository"
