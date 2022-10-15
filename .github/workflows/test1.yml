@@ -30,8 +30,11 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
 
-      - name: Print needs
-        run: echo '${{ toJSON(needs) }}'
+      - name: Set github envs for debug
+        run: echo 'Set github envs for debug' #'${{ toJSON(needs) }}'
+        env:
+          GITHUB_JSON: ${{ toJSON(github) }}
+          NEEDS_JSON: ${{ toJSON(needs) }}
 
       - name: Display structure of downloaded files
         run: ls -R
