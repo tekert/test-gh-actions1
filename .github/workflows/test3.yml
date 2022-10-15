@@ -6,10 +6,10 @@ on:
   workflow_call:
     inputs:
       target:
-        description: "'last-release' | 'commit/branch/tag'"
+        description: "'--last-release' | 'commit/branch/tag'"
         required: false
         type: string
-        default: "last-release"
+        default: "--last-release"
 
   # Allows you to run this workflow manually from the Actions tab (for testing)
   workflow_dispatch:
@@ -55,6 +55,9 @@ jobs:
       - name: "Setup build modes from event type"
         shell: bash
         run: |
+          echo "Event name: ${{ github.event_name }}"
+          echo "inputs: ${{ toJSON(inputs) }}"
+
           echo "Getting tags..."
           git fetch --tags
 
@@ -64,7 +67,7 @@ jobs:
           BUILD_REF="master"
           DART_POLISHER_BRANCH="stable"
           if [[ "${{ github.event_name }}" == "workflow_call" ]]; then
-              if [[ "${{ inputs.target }}" == "last_release" ]]; then
+              if [[ "${{ inputs.target }}" == "--last_release" ]]; then
                   BUILD_REF=$(git tag --sort=-creatordate | awk 'match($0, /^v[0-9]+\.[0-9]+\.[0-9]+$/)' | head -n 1)
               else
                   BUILD_REF=${{ inputs.target }}
