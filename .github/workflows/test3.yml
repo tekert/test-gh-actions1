@@ -45,6 +45,7 @@ jobs:
           GITHUB_JSON: ${{ toJSON(github) }}
           NEEDS_JSON: ${{ toJSON(needs) }}
           ENV_JSON: ${{ toJSON(env) }}
+        working-directory: "."
 
       - name: Display structure of downloaded files
         run: |
