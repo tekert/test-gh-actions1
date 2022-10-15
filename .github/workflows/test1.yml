@@ -16,7 +16,7 @@ jobs:
     with:
       target: last-release
     secrets:
-      GH_PAT: ${{ secrets.GH_PAT }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build:
     needs: [build1]

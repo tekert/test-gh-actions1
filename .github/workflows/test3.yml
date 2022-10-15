@@ -11,7 +11,7 @@ on:
         type: string
         default: "last-release"
     secrets:
-      GH_PAT:
+      GITHUB_TOKEN:
         description: 'A token passed from the caller workflow'
         required: false
 
@@ -47,7 +47,7 @@ jobs:
         with:
           repository: tekert/test-gh-actions1
           path: formatter_server
-          token: ${{ secrets.GH_PAT }} # TODO: delete this line when going open source.
+          token: ${{ secrets.GITHUB_TOKEN }} # TODO: delete this line when going open source.
           ref: ${{ inputs.branch }} # gets default branch if input is not given.
 
       # workflow_run | workflow_dispatch : ${{github.event_name}}
