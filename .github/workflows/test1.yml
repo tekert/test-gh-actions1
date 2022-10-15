@@ -15,8 +15,7 @@ jobs:
     uses: ./.github/workflows/test3.yml
     with:
       target: last-release
-    secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    secrets: inherit
 
   build:
     needs: [build1]

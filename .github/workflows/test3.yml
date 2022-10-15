@@ -41,13 +41,19 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
 
+      - name: "Setup secrets"
+        shell: bash
+        run: |
+          echo "DART_POLISHER_BRANCH=$DART_POLISHER_BRANCH" >> $GITHUB_ENV
+          echo "Using $DART_POLISHER_BRANCH brach for dart_polisher"
+
       # https://github.com/actions/checkout
       - name: "Clone formatter_server repository"
         uses: actions/checkout@v3
         with:
           repository: tekert/test-gh-actions1
           path: formatter_server
-          token: ${{ secrets.GITHUB_TOKEN }} # TODO: delete this line when going open source.
+          #token: ${{ secrets.GH_PAT }} # TODO: delete this line when going open source.
           ref: ${{ inputs.branch }} # gets default branch if input is not given.
 
       # workflow_run | workflow_dispatch : ${{github.event_name}}
