@@ -1,5 +1,5 @@
 name: test1
-run-name: "Build a release from: -> ${{ github.workflow }} (on tag: @${{ github.ref_name }})"
+run-name: "Build a release: -> ${{ github.workflow }} (on ${{ github.ref_type }}: ${{ github.ref_name }})"
 
 on:
   push:

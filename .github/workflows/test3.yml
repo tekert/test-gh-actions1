@@ -11,7 +11,7 @@ on:
         description: "'--last-release' | 'commit/branch/tag'"
         required: false
         type: string
-        default: "--last-release"
+        default: "${{ github.ref_name }}"
 
   # Allows you to run this workflow manually from the Actions tab (for testing)
   workflow_dispatch:
@@ -51,26 +51,26 @@ jobs:
           repository: tekert/test-gh-actions1
           path: formatter_server
           #token: ${{ secrets.GH_PAT }} # TODO: delete this line when going open source.
-          ref: master # gets the event ref if this is empty.
+          #ref: master # gets the event ref if this is empty.
 
-      # workflow_run | workflow_dispatch : ${{github.event_name}}
+      # workflow_run | workflow_dispatch : ${{github.event_name}}; workflow_call : ${{(CALLER)github.event_name}}
       - name: "Setup build modes from event type"
         shell: bash
         run: |
-          echo "Event name: ${{ github.event_name }}"
-          echo "github.ref: ${{ github.ref }}"
           echo "inputs: ${{ toJSON(inputs) }}"
           echo '${{ toJSON(github) }}'
 
           echo "Getting tags..."
-          git fetch --tags
+          git fetch --tags -f --quiet
 
           echo "Getting repo name..."
           REPO_NAME=${GITHUB_REPOSITORY#*/}
           echo "Parsing $REPO_NAME build ref..."
           BUILD_REF="master"
           DART_POLISHER_BRANCH="stable"
-          if [[ "${{ github.event_name }}" == "workflow_call" ]]; then
+
+          # if this is a workflow_call then
+          if [[ "${{ inputs.target }}" != "" ]]; then
               if [[ "${{ inputs.target }}" == "--last_release" ]]; then
                   BUILD_REF=$(git tag --sort=-creatordate | awk 'match($0, /^v[0-9]+\.[0-9]+\.[0-9]+$/)' | head -n 1)
               else
@@ -78,7 +78,7 @@ jobs:
               fi
               DART_POLISHER_BRANCH=${{ inputs.polisher_branch }}
           fi
-          if [[ "${{github.event_name}}" == "workflow_dispatch" ]]; then
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
               BUILD_REF="${{ inputs.branch }}"
           fi
           echo "BUILD_REF=$BUILD_REF" >> $GITHUB_ENV
