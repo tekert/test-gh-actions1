@@ -1,8 +1,10 @@
 name: test3
+# this is not used when on a workflow_call
 run-name: "Build ${{ github.repository }} from: ${{ github.event.workflow.name }} -> ${{ github.workflow }} (target: @${{ inputs.branch }}${{ github.event.inputs.target }})"
 
 # Controls when the workflow will run
 on:
+  # {{ github }} context is inherited from caller.
   workflow_call:
     inputs:
       target:
@@ -100,5 +102,5 @@ jobs:
         uses: actions/upload-artifact@v3.1.0
         with:
           name: native-executables
-          path: README.md
+          path: formatter_server/README.md
           retention-days: 5
