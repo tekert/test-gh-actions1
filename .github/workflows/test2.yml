@@ -30,6 +30,14 @@ jobs:
     runs-on:  ubuntu-latest
 
     steps:
+
+      - name: Set github envs for debug
+        run: echo 'Set github envs for debug' #'${{ toJSON(needs) }}'
+        env:
+          GITHUB_JSON: ${{ toJSON(github) }}
+          NEEDS_JSON: ${{ toJSON(needs) }}
+          ENV_JSON: ${{ toJSON(env) }}
+
       - name: Display structure of downloaded files
         run: ls -R
 
