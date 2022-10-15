@@ -54,7 +54,7 @@ jobs:
         shell: bash
         run: |
           echo "Getting tags..."
-          git fetch --tags --quiet
+          git fetch --tags
 
           echo "Getting repo name..."
           REPO_NAME=${GITHUB_REPOSITORY#*/}
