@@ -10,10 +10,6 @@ on:
         required: false
         type: string
         default: "last-release"
-    secrets:
-      GITHUB_TOKEN:
-        description: 'A token passed from the caller workflow'
-        required: false
 
   # Allows you to run this workflow manually from the Actions tab (for testing)
   workflow_dispatch:
