@@ -58,7 +58,7 @@ jobs:
           echo "Event name: ${{ github.event_name }}"
           echo "github.ref: ${{ github.ref }}"
           echo "inputs: ${{ toJSON(inputs) }}"
-          echo "inputs: ${{ toJSON(github) }}"
+          echo '${{ toJSON(github) }}'
 
           echo "Getting tags..."
           git fetch --tags
