@@ -49,7 +49,7 @@ jobs:
           repository: tekert/test-gh-actions1
           path: formatter_server
           #token: ${{ secrets.GH_PAT }} # TODO: delete this line when going open source.
-          ref: ${{ inputs.branch }} # gets default branch if input is not given.
+          ref: master # gets the event ref if this is empty.
 
       # workflow_run | workflow_dispatch : ${{github.event_name}}
       - name: "Setup build modes from event type"
