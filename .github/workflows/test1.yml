@@ -21,14 +21,17 @@ jobs:
       target: "--last-release"
     secrets: inherit
 
-  build:
+  build2:
     needs: [build1]
-    if: needs.build1.outputs.status == 'success'
+    if: needs.build1.result == 'success'
 
     runs-on:  ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+
+      - name: Print needs
+        run: echo '${{ toJSON(needs) }}'
 
       - name: Display structure of downloaded files
         run: ls -R
