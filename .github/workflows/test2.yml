@@ -25,7 +25,7 @@ jobs:
 
   release:
     # Run if this was fired from a success worflow_run or workflow_dispatch (in wich case workflow_run.conclusion would be empty)
-    #if: ${{ contains(fromJson('["success", ""]'), github.event.workflow_run.conclusion) || (github.event_name == 'workflow_dispatch') }}
+    if: ${{ contains(fromJson('["success", ""]'), github.event.workflow_run.conclusion) || (github.event_name == 'workflow_dispatch') }}
 
     runs-on:  ubuntu-latest
 
