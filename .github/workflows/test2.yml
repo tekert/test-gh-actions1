@@ -1,6 +1,6 @@
 name: test2
 
-run-name: "Make release from: ${{ github.event.workflow.name }} -> ${{ github.workflow }} (on tag: @${{ inputs.versionName }}${{ github.event.workflow_run.head_branch }})"
+run-name: "Make release from: ${{ github.event.workflow.name }} -> ${{ github.workflow }} (on tag: ${{ inputs.versionName }}${{ github.event.workflow_run.head_branch }})"
 
 on:
 
