@@ -105,6 +105,8 @@ jobs:
           DART_POLISHER_BRANCH=$(cat ./build-data/dpbranch)
 
           echo "$BUILD_REF"
+          echo "$COMPILED_VERSION"
+          echo "$DART_POLISHER_BRANCH"
 
       # steps.create_release.outputs.upload_url   has the URL
       - name: Generate release data using Markdown
