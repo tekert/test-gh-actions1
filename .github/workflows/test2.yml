@@ -1,23 +1,30 @@
 # (test1 -> test3) -> test2
 name: test2
 
-run-name: "Make release from: ${{ github.event.workflow.name }} -> ${{ github.workflow }} (on tag: ${{ inputs.versionName }}${{ github.event.workflow_run.head_branch }})"
+run-name: "Release: ('${{ github.event.workflow.name }}' -> '${{ github.workflow }}') [on ${{ github.event.workflow_run.event }}: ${{ inputs.versionName }}${{ github.event.workflow_run.head_branch }}]"
 
 on:
 
-  #! Note: This event will only trigger a workflow run if the workflow file is on the default branch.
+  #! NOTE: This event will only trigger a workflow run if the workflow file is on the default branch.
   workflow_run:
     workflows: [test1]
     branches:
+      # Only run when parent workflow was run on push tags
       - v[0-9]+.[0-9]+.[0-9]+
     types:
       - completed
 
+  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
       versionName:
         description: 'Name of version  (ie v5.5.0) same as tag name'
         required: true
+      isDraft:
+        description: 'Should we create a draft release?'
+        required: false
+        default: true
+        type: boolean
 
 permissions:
   contents: write
@@ -43,6 +50,27 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -R
 
+      - name: "Setup variables"
+        shell: bash
+        run: |
+          # Parent workflow is on an push tag event, so this head_branch will be a version.
+          if [[ "${{github.event_name}}" == "workflow_run" ]]; then
+              CHECKOUT_TAG=${{ github.event.workflow_run.head_branch }}
+              RELEASE_IS_DRAFT=true
+          fi
+          if [[ "${{github.event_name}}" == "workflow_dispatch" ]]; then
+              CHECKOUT_TAG=${{ inputs.versionName }}
+              RELEASE_IS_DRAFT=${{ inputs.isDraft }}
+          fi
+          if [[ "$CHECKOUT_TAG" == "" ]]; then
+              echo "CHECKOUT_TAG is null, something when wront when selecting a git tag from event: ${{github.event_name}}"
+              exit 1
+          fi
+          echo "CHECKOUT_TAG=$CHECKOUT_TAG" >> $GITHUB_ENV
+          echo "Using $CHECKOUT_TAG as tag to checkout ${GITHUB_REPOSITORY#*/}"
+          echo "RELEASE_IS_DRAFT=$RELEASE_IS_DRAFT" >> $GITHUB_ENV
+          echo "Releasing a draft?: '$RELEASE_IS_DRAFT'"
+
       # To have access to CHANGELOG.md and tags
       - name: "Checkout local repository"
         uses: actions/checkout@v3
@@ -60,3 +88,12 @@ jobs:
         id: github_context_step
         run: |
           echo "end"
+
+      # steps.create_release.outputs.upload_url   has the URL
+      - name: Generate release data using Markdown
+        run: |
+          echo "### :rocket: Release data:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Release url: ${{ steps.create_release.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Release ID: ${{ steps.create_release.outputs.id }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Upload url: ${{ steps.create_release.outputs.upload_url }}" >> $GITHUB_STEP_SUMMARY

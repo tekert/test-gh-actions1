@@ -1,28 +1,36 @@
 # (test1 -> test3) -> test2
 name: test1
-run-name: "Build a release: -> ${{ github.workflow }} (on ${{ github.ref_type }}: ${{ github.ref_name }})"
+
+###
+#  Builds native executables for [linux,windows,mac] when a semantic release tag is pushed.
+#  Renames the output files based on OS and uploads each one (3) for release.
+#  Finally deletes temporary artifacts
+#    release.yml is automatically called when this finishes.
+
+
+# https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#push
+# https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#push
+run-name: "Build: [on ${{ github.ref_type }}: ${{ github.ref_name }} ${{ inputs.buildref }}]"
 
 on:
   push:
     tags:
       - v[0-9]+.[0-9]+.[0-9]+
 
-  # Allows you to run this workflow manually from the Actions tab (for testing)
+  # For testing purposes (manually fire a tag event, target sets a ref to build)
   workflow_dispatch:
     inputs:
-      target:
-        description: "'--last-release' (use the last release) | '<ref>' (commit/tag/branch) | '' (use caller <ref>)"
+      buildref:
+        description: "'--last-release' (use the last release) | '<ref>' (commit/tag/branch) | '' (use selected <ref>)"
         required: false
         type: string
-        default: "${{ github.ref_name }}"
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
 
   build1:
     uses: ./.github/workflows/test3.yml
     with:
-      target: ${{ inputs.target }}
+      target: ${{ inputs.buildref }}
     secrets: inherit
 
   build2:

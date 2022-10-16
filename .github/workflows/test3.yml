@@ -1,7 +1,18 @@
 # test1 -> test3 -> test2
 name: test3
-# this is not used when on a workflow_call
-run-name: "Build ${{ github.repository }} from: ${{ github.event.workflow.name }} -> ${{ github.workflow }} (target: ${{ inputs.branch }}${{ github.event.inputs.target }})"
+
+###
+#  Builds native executables for [linux,windows,mac] when called or manually triggered.
+#    input 'target' can be set to '--last-release' when called, it builds the last release tag.
+#    (Releases are done in semantic tags example: "v1.2.3" on master branch)
+#  Uploads all output files as 'dartpolishd-${{ matrix.output-name }}'
+#  This output format is ready for use by the vscode polisher extension.
+
+
+# https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_call
+# NOTE: Payload is the same as the caller.
+# run-name is not used when on a workflow_call
+run-name: "Build ${{ github.repository }} ('${{ github.event.workflow.name }}' -> '${{ github.workflow }}') [target: ${{ inputs.branch }}${{ github.event.inputs.target }}]"
 
 # Controls when the workflow will run
 on:
@@ -9,7 +20,7 @@ on:
   workflow_call:
     inputs:
       target:
-        description: "'--last-release' | 'commit/branch/tag'"
+        description: "'--last-release' (use the last release) | '<ref>' (commit/tag/branch) | '' (use caller <ref>)"
         required: false
         type: string
         default: "${{ github.ref_name }}"
@@ -18,7 +29,7 @@ on:
   workflow_dispatch:
     inputs:
       branch:
-        description: 'Branch to build (defaults to default branch)'
+        description: 'Branch/Tag/Commit to build (defaults to selected ref when fired manually)'
         required: false
       polisher_branch:
         description: 'Dart Polisher branch to use when building (defaults to stable branch)'
@@ -62,30 +73,34 @@ jobs:
           path: formatter_server
           #ref: master # gets the event ref if this is empty.
 
-      # workflow_run | workflow_dispatch : ${{github.event_name}}; workflow_call : ${{(CALLER)github.event_name}}
-      - name: "Setup build modes from event type"
+      # workflow_run | workflow_dispatch : ${{github.event_name}}; workflow_call : ${{(PARENT)github.event_name}};
+      # Means github.event_name on a workflow_call its not an individual event, its the caller event, (its better to just check if the inputs are not null).
+      - name: "Setup variables"
         shell: bash
         run: |
-          echo "inputs: ${{ toJSON(inputs) }}"
-
+          # Setup build modes from event type
           echo "Getting tags..."
-          git fetch --tags -f --quiet
+          git fetch --tags -f
+
+          echo "Github event: ${{ github.event_name }}"
 
           echo "Getting repo name..."
           REPO_NAME=${GITHUB_REPOSITORY#*/}
           echo "Parsing $REPO_NAME build ref..."
-          BUILD_REF="master"
+          BUILD_REF=${{ github.ref_name }}
           DART_POLISHER_BRANCH="stable"
-
           # if this is a workflow_call then
           if [[ "${{ inputs.target }}" != "" ]]; then
               if [[ "${{ inputs.target }}" == "--last-release" ]]; then
+                  # Gets the last tag release name.
                   BUILD_REF=$(git tag --sort=-creatordate | awk 'match($0, /^v[0-9]+\.[0-9]+\.[0-9]+$/)' | head -n 1)
               else
                   BUILD_REF=${{ inputs.target }}
               fi
           fi
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          # workflow_dispatch (github.event_name) can be from the caller or the called
+          # To check in wich event we are, just check if the local input exists.
+          if [[ "${{ inputs.branch }}" != "" ]]; then
               echo "workflow_dispatch ref: ${{ inputs.branch }}"
               BUILD_REF="${{ inputs.branch }}"
               DART_POLISHER_BRANCH=${{ inputs.polisher_branch }}
@@ -113,3 +128,18 @@ jobs:
           name: native-executables
           path: formatter_server/README.md
           retention-days: 5
+
+      # This is in a matrix, so only output this info from one OS
+      - name: Generate release data using Markdown
+        if: ${{ matrix.os == "ubuntu-latest"}}
+        run: |
+          echo 'Build from ref: `{{ env.BUILD_REF }}`' >> $GITHUB_STEP_SUMMARY
+          echo 'Built version: **{{ env.COMPILED_VERSION }}** `' >> $GITHUB_STEP_SUMMARY
+          echo '' >> $GITHUB_STEP_SUMMARY
+          echo 'Event name: `${{ github.event_name }}`' >> $GITHUB_STEP_SUMMARY
+          echo 'Workflow: `${{ github.workflow }}`' >> $GITHUB_STEP_SUMMARY
+          echo 'Called from workflow: `${{ github.event.workflow.name }}`' >> $GITHUB_STEP_SUMMARY
+          echo '' >> $GITHUB_STEP_SUMMARY
+          printf 'Inputs:\n```json\n ${{ toJSON(inputs) }}\n```' >> $GITHUB_STEP_SUMMARY
+          printf 'Event inputs:\n```json\n ${{ toJSON(github.event.inputs) }}\n```' >> $GITHUB_STEP_SUMMARY
+        shell: bash
