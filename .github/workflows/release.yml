@@ -99,7 +99,7 @@ jobs:
 
       - name: Unzip build-data
         run: |
-          unzip build-data.zip -d ./build-data
+          unzip ./releases/build-data.zip -d ./build-data
 
       # steps.create_release.outputs.upload_url   has the URL
       - name: Generate release data using Markdown
