@@ -12,7 +12,7 @@ name: Build
 # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_call
 # NOTE: Payload is the same as the caller.
 # run-name is not used when on a workflow_call
-run-name: "Build ${{ github.repository }} ('${{ github.job || github.event_name }}' -> '${{ github.workflow }}') [target: ${{ inputs.branch || github.event.inputs.target }}] [ref: ${{ github.ref_name }}]"
+run-name: "Build ${{ github.event.repository.name }}: ('${{ github.job || github.event_name }}' -> '${{ github.workflow }}') [target: ${{ inputs.branch || github.event.inputs.target }}] [ref: ${{ github.ref_name }}]"
 
 # Controls when the workflow will run
 on:
