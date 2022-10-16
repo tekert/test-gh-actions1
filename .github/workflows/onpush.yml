@@ -11,7 +11,7 @@ name: onPush
 # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#push
 # https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#push
 #run-name: "Build: [on ${{ github.ref_type }}: ${{ inputs.buildref == '' && github.ref_name || inputs.buildref }}]"
-run-name: "Build: [on ${{ inputs.buildref == '' && github.ref_type || 'worflow_dispatch' }}] [build ref: ${{ inputs.buildref || github.ref_name }}] #ref: ${{ inputs.buildref && github.ref_name }}"
+run-name: "Build: [on ${{ inputs.buildref == '' && github.ref_type || 'worflow_dispatch' }}] [build ref: ${{ inputs.buildref || github.ref_name }}] #Workflow from: ${{github.ref_name}}"
 
 on:
   push:
