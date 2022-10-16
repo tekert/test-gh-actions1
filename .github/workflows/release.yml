@@ -1,8 +1,8 @@
 # (onpush -> build) -> release
 name: release
 
-run-name: "Release: ('${{ github.event.workflow.name }}' -> '${{ github.workflow }}') [on ${{ github.event.workflow_run.event }}: ${{ inputs.versionName == '' && github.event.workflow_run.head_branch || inputs.versionName }}]"
-
+#run-name: "Release: ('${{ github.event.workflow.name }}' -> '${{ github.workflow }}') [on ${{ github.event.workflow_run.event }}: ${{ inputs.versionName == '' && github.event.workflow_run.head_branch || inputs.versionName }}]"
+run-name: "Release: ('${{ github.event.workflow.name }}' -> '${{ github.workflow }}') [on ${{ github.event.workflow_run.event }}: ${{ github.event.workflow_run.head_branch || inputs.versionName }}]"
 on:
 
   #! NOTE: This event will only trigger a workflow run if the workflow file is on the default branch.
