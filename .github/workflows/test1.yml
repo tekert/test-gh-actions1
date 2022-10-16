@@ -1,3 +1,4 @@
+# (test1 -> test3) -> test2
 name: test1
 run-name: "Build a release: -> ${{ github.workflow }} (on ${{ github.ref_type }}: ${{ github.ref_name }})"
 
@@ -5,12 +6,15 @@ on:
   push:
     tags:
       - v[0-9]+.[0-9]+.[0-9]+
+
   # Allows you to run this workflow manually from the Actions tab (for testing)
-  workflow_dispatch:
+  workflow_call:
     inputs:
-      versionName:
-        description: 'Name of version  (ie v1.2.3) same as tag name'
+      target:
+        description: "'--last-release' (use the last release) | '<ref>' (commit/tag/branch)"
         required: false
+        type: string
+        default: "HEAD"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -18,7 +22,7 @@ jobs:
   build1:
     uses: ./.github/workflows/test3.yml
     with:
-      target: "--last-release"
+      target: ${{ inputs.target }}
     secrets: inherit
 
   build2:

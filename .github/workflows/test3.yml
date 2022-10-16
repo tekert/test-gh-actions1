@@ -1,3 +1,4 @@
+# test1 -> test3 -> test2
 name: test3
 # this is not used when on a workflow_call
 run-name: "Build ${{ github.repository }} from: ${{ github.event.workflow.name }} -> ${{ github.workflow }} (target: ${{ inputs.branch }}${{ github.event.inputs.target }})"
@@ -43,6 +44,7 @@ jobs:
         run: echo 'Set github envs for debug' #'${{ toJSON(needs) }}'
         env:
           GITHUB_JSON: ${{ toJSON(github) }}
+          INPUTS_JSON: ${{ toJSON(inputs) }}
           NEEDS_JSON: ${{ toJSON(needs) }}
           ENV_JSON: ${{ toJSON(env) }}
         working-directory: "."
@@ -58,7 +60,6 @@ jobs:
         with:
           repository: tekert/test-gh-actions1
           path: formatter_server
-          #token: ${{ secrets.GH_PAT }} # TODO: delete this line when going open source.
           #ref: master # gets the event ref if this is empty.
 
       # workflow_run | workflow_dispatch : ${{github.event_name}}; workflow_call : ${{(CALLER)github.event_name}}
