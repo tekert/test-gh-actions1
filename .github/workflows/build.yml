@@ -147,3 +147,17 @@ jobs:
           printf 'Inputs:\n```json\n${{ toJSON(inputs) }}\n```\n' >> $GITHUB_STEP_SUMMARY
           printf 'Caller inputs:\n```json\n${{ toJSON(github.event.inputs) }}\n```\n' >> $GITHUB_STEP_SUMMARY
         shell: bash
+
+      - name: Upload build data for callers
+        if: true
+        run: |
+          mkdir -p ./build-data
+          echo '${{ env.BUILD_REF }}' >> ./build-data/ref
+          echo '${{ env.COMPILED_VERSION }}' >> ./build-data/version
+          echo '${{ env.DART_POLISHER_BRANCH }}' >> ./build-data/dpbranch
+      - uses: actions/upload-artifact@v3.1.0
+        if: true
+        with:
+          name: build-data
+          path: build-data
+          retention-days: 5

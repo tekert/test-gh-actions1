@@ -79,17 +79,27 @@ jobs:
         with:
           ref: ${{ github.event.workflow_run.head_branch }}
 
-      - name: Dump GitHub event context
-        id: github_event_context_step
-        run: echo $JSON
-        env:
-          JSON: ${{ toJSON(github.event) }}
+      # Alternative on https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_run
+      # Download artifacts from the last run of build_on_tag (cleaner method that works on workflow_dispatch (no run_id))
+      # Do not specify pr, commit, branch, run_id together or workflow_conclusion and run_id together. Pick just one of each or none.
+      - name: Download artifact Linux
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: onpush.yml
+          workflow_conclusion: success # for when this is a workflow_dispatch
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          #run_id: ${{ github.event.workflow_run.id }} # workflow_conclusion is already defined.
+          run_number: ${{ github.event.workflow_run.run_number }} # (caller run number) if null, default is to take the last successful run
+          branch: ${{ github.event.workflow_run.head_branch }}
+          path: releases
+          skip_unpack: true
 
-      # event_name = workflow_run
-      - name: Dump GitHub context
-        id: github_context_step
+      - name: Display structure of downloaded files
+        run: ls -R
+
+      - name: Unzip build-data
         run: |
-          echo "end"
+          unzip build-data.zip -d ./build-data
 
       # steps.create_release.outputs.upload_url   has the URL
       - name: Generate release data using Markdown
