@@ -161,3 +161,6 @@ jobs:
           name: build-data
           path: build-data
           retention-days: 5
+
+      - name: Display structure of downloaded files
+        run: ls -R
