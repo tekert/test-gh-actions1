@@ -11,10 +11,10 @@ on:
   workflow_dispatch:
     inputs:
       target:
-        description: "'--last-release' (use the last release) | '<ref>' (commit/tag/branch)"
+        description: "'--last-release' (use the last release) | '<ref>' (commit/tag/branch) | '' (use caller <ref>)"
         required: false
         type: string
-        default: "HEAD"
+        default: "${{ github.ref_name }}"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
