@@ -12,12 +12,11 @@ name: build
 # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_call
 # NOTE: Payload is the same as the caller.
 # run-name is not used when on a workflow_call
-run-name: "Build ${{ github.repository }} ('${{ github.event.workflow.name }}' -> '${{ github.workflow }}') [target: ${{ inputs.branch }}${{ github.event.inputs.target }}]"
+run-name: "Build ${{ github.repository }} ('${{ github.job }}' -> '${{ github.workflow }}') [target: ${{ inputs.branch }}${{ github.event.inputs.target }}]"
 
 # Controls when the workflow will run
 on:
-  # {{ github }} context is inherited from caller (except github.job).
-  # {{ inputs }} too
+  # {{ github }} {{ inputs }} context is inherited from caller (except github.job).
   workflow_call:
     inputs:
       target:
@@ -134,14 +133,13 @@ jobs:
       - name: Generate release data using Markdown
         if: true
         run: |
-          echo 'Build from ref: `${{ env.BUILD_REF }}`' >> $GITHUB_STEP_SUMMARY
-          echo 'Built version: **${{ env.COMPILED_VERSION }}**' >> $GITHUB_STEP_SUMMARY
+          echo 'Compiled from git ref: `${{ env.BUILD_REF }}`' >> $GITHUB_STEP_SUMMARY
+          echo 'Compiled version: **${{ env.COMPILED_VERSION }}**' >> $GITHUB_STEP_SUMMARY
           echo '' >> $GITHUB_STEP_SUMMARY
           echo 'Event name: `${{ github.event_name }}`' >> $GITHUB_STEP_SUMMARY
           echo 'Workflow: `${{ github.workflow }}`' >> $GITHUB_STEP_SUMMARY
-          echo 'Called from workflow: `${{ github.event.workflow.name }}`' >> $GITHUB_STEP_SUMMARY
+          echo 'Called from workflow: `${{ github.workflow }}`' >> $GITHUB_STEP_SUMMARY
           echo '' >> $GITHUB_STEP_SUMMARY
-          printf 'Inputs:\n```json\n ${{ toJSON(inputs) }}\n```' >> $GITHUB_STEP_SUMMARY
-          echo '' >> $GITHUB_STEP_SUMMARY
-          printf 'Event inputs:\n```json\n ${{ toJSON(github.event.inputs) }}\n```' >> $GITHUB_STEP_SUMMARY
+          printf 'Inputs:\n```json\n ${{ toJSON(inputs) }}\n```\n' >> $GITHUB_STEP_SUMMARY
+          printf 'Caller inputs:\n```json\n ${{ toJSON(github.event.inputs) }}\n```\n' >> $GITHUB_STEP_SUMMARY
         shell: bash
