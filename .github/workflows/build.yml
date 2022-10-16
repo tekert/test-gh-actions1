@@ -137,7 +137,7 @@ jobs:
           echo 'Compiled version: **${{ env.COMPILED_VERSION }}**' >> $GITHUB_STEP_SUMMARY
           echo '' >> $GITHUB_STEP_SUMMARY
           echo 'Event name: `${{ github.event_name }} ${{ github.ref_type }}`' >> $GITHUB_STEP_SUMMARY
-          echo 'Job: `${{ github.job}}`' >> $GITHUB_STEP_SUMMARY
+          echo 'Workflow: `$GITHUB_WORKFLOW`' >> $GITHUB_STEP_SUMMARY
           echo 'Called from workflow: `${{ github.workflow }}`' >> $GITHUB_STEP_SUMMARY
           echo '' >> $GITHUB_STEP_SUMMARY
           printf 'Inputs:\n```json\n${{ toJSON(inputs) }}\n```\n' >> $GITHUB_STEP_SUMMARY
