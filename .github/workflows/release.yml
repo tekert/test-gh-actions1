@@ -1,7 +1,7 @@
 # (onpush -> build) -> release
 name: release
 
-run-name: "Release: ('${{ github.event.workflow.name }}' -> '${{ github.workflow }}') [on ${{ github.event.workflow_run.event }}: ${{ inputs.versionName }}${{ github.event.workflow_run.head_branch }}]"
+run-name: "Release: ('${{ github.event.workflow.name }}' -> '${{ github.workflow }}') [on ${{ github.event.workflow_run.event }}: ${{ inputs.versionName == '' && github.event.workflow_run.head_branch || inputs.versionName }}]"
 
 on:
 
