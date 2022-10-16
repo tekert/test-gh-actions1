@@ -159,7 +159,7 @@ jobs:
         if: true
         with:
           name: build-data
-          path: build-data
+          path: build-data/
           retention-days: 5
 
       - name: Display structure of downloaded files
