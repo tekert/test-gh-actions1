@@ -133,13 +133,17 @@ jobs:
       - name: Generate release data using Markdown
         if: true
         run: |
+          echo '### Build' >> $GITHUB_STEP_SUMMARY
           echo 'Compiled from git ref: `${{ env.BUILD_REF }}`' >> $GITHUB_STEP_SUMMARY
           echo 'Compiled version: **${{ env.COMPILED_VERSION }}**' >> $GITHUB_STEP_SUMMARY
           echo '' >> $GITHUB_STEP_SUMMARY
+          echo '### Worflow' >> $GITHUB_STEP_SUMMARY
           echo 'Event name: `${{ github.event_name }} ${{ github.ref_type }}`' >> $GITHUB_STEP_SUMMARY
+          echo 'Worflow files ref: `${{ github.ref_type }} : ${{ github.ref }}`' >> $GITHUB_STEP_SUMMARY
           echo 'Workflow: `${{ env.GITHUB_WORKFLOW }}`' >> $GITHUB_STEP_SUMMARY
           echo 'Called from workflow: `${{ github.workflow }}`' >> $GITHUB_STEP_SUMMARY
           echo '' >> $GITHUB_STEP_SUMMARY
+          echo '### Inputs' >> $GITHUB_STEP_SUMMARY
           printf 'Inputs:\n```json\n${{ toJSON(inputs) }}\n```\n' >> $GITHUB_STEP_SUMMARY
           printf 'Caller inputs:\n```json\n${{ toJSON(github.event.inputs) }}\n```\n' >> $GITHUB_STEP_SUMMARY
         shell: bash
