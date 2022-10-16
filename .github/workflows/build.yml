@@ -55,9 +55,9 @@ jobs:
         run: echo 'Set github envs for debug' #'${{ toJSON(needs) }}'
         env:
           GITHUB_JSON: ${{ toJSON(github) }}
-          INPUTS_JSON: ${{ toJSON(inputs) }}
           NEEDS_JSON: ${{ toJSON(needs) }}
           ENV_JSON: ${{ toJSON(env) }}
+          INPUTS_JSON: ${{ toJSON(inputs) }}
         working-directory: "."
 
       - name: Display structure of downloaded files
@@ -133,13 +133,14 @@ jobs:
       - name: Generate release data using Markdown
         if: true
         run: |
-          echo 'Build from ref: `{{ env.BUILD_REF }}`' >> $GITHUB_STEP_SUMMARY
-          echo 'Built version: **{{ env.COMPILED_VERSION }}** `' >> $GITHUB_STEP_SUMMARY
+          echo 'Build from ref: `${{ env.BUILD_REF }}`' >> $GITHUB_STEP_SUMMARY
+          echo 'Built version: **${{ env.COMPILED_VERSION }}**' >> $GITHUB_STEP_SUMMARY
           echo '' >> $GITHUB_STEP_SUMMARY
           echo 'Event name: `${{ github.event_name }}`' >> $GITHUB_STEP_SUMMARY
           echo 'Workflow: `${{ github.workflow }}`' >> $GITHUB_STEP_SUMMARY
           echo 'Called from workflow: `${{ github.event.workflow.name }}`' >> $GITHUB_STEP_SUMMARY
           echo '' >> $GITHUB_STEP_SUMMARY
           printf 'Inputs:\n```json\n ${{ toJSON(inputs) }}\n```' >> $GITHUB_STEP_SUMMARY
+          echo '' >> $GITHUB_STEP_SUMMARY
           printf 'Event inputs:\n```json\n ${{ toJSON(github.event.inputs) }}\n```' >> $GITHUB_STEP_SUMMARY
         shell: bash
