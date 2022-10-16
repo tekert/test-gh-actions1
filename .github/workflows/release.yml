@@ -100,9 +100,9 @@ jobs:
       - name: Unzip build-data
         run: |
           unzip ./releases/build-data.zip -d ./build-data
-          BUILD_REF << ./build-data/ref
-          COMPILED_VERSION << ./build-data/version
-          DART_POLISHER_BRANCH << ./build-data/dpbranch
+          BUILD_REF=$(cat ./build-data/ref)
+          COMPILED_VERSION=$(cat ./build-data/version)
+          DART_POLISHER_BRANCH=$(cat ./build-data/dpbranch)
 
           echo "$BUILD_REF"
 
