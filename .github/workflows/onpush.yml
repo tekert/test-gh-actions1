@@ -73,3 +73,7 @@ jobs:
         with:
           name: test
           path: README.md
+
+      - name: TEST ACCESS TO ENV FROM CALLED WORKFLOW
+        run: |
+          echo "BUILT_REF: ${{env.BUILD_REF}}"
