@@ -1,5 +1,5 @@
-# test1 -> test3 -> test2
-name: test3
+# (onpush -> build) -> release
+name: build
 
 ###
 #  Builds native executables for [linux,windows,mac] when called or manually triggered.

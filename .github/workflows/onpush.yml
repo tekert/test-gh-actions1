@@ -1,5 +1,5 @@
-# (test1 -> test3) -> test2
-name: test1
+# (onpush -> build) -> release
+name: onpush
 
 ###
 #  Builds native executables for [linux,windows,mac] when a semantic release tag is pushed.
@@ -28,7 +28,7 @@ on:
 jobs:
 
   build1:
-    uses: ./.github/workflows/test3.yml
+    uses: ./.github/workflows/build.yml
     with:
       target: ${{ inputs.buildref }}
     secrets: inherit
