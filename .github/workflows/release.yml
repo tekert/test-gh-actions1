@@ -97,7 +97,6 @@ jobs:
         run: |
           # Parent workflow is on an push tag event, so this head_branch will be a version.
           if [[ "${{github.event_name}}" == "workflow_run" ]]; then
-              # TODO: in workflow_dispatch this is the original ref (master for example) not the BUILT ref. See how to get env from triggering workflow.
               CHECKOUT_TAG=${{ env.BUILD_REF }}
               RELEASE_IS_DRAFT=true
           fi
