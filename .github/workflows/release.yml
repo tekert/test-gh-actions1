@@ -1,10 +1,10 @@
 # (onpush -> build) -> release
 name: Release
 
-#run-name: "Release: ('${{ github.event.workflow.name }}' -> '${{ github.workflow }}') [on ${{ github.event.workflow_run.event }}: ${{ inputs.versionName == '' && github.event.workflow_run.head_branch || inputs.versionName }}]"
-#run-name: "Release: ('${{ github.event.workflow.name || 'workflow_dispatch' }}' -> '${{ github.workflow }}') [on ${{ github.event.workflow_run.event }}: ${{ github.event.workflow_run.head_branch || inputs.versionName }}] [ref: ${{ github.ref_name }}]"
-#run-name: "${{ github.workflow }}: [from: '${{ github.event.workflow.name || 'workflow_dispatch' }} on: ${{ github.event.workflow_run.event }}'] [version: ${{ github.event.workflow_run.head_branch || inputs.versionName }}] [ref: ${{ github.ref_name }}]"
-run-name: "${{ github.workflow }}: [event: ${{ github.event_name }}] [from: ${{ github.event.workflow.name || 'manual' }}] [on: '${{ github.event.workflow_run.event || 'input' }}': ${{ github.event.workflow_run.head_branch || inputs.versionName }}] [ref: ${{ github.ref_name }}]"
+#run-name: "Release: ('${{ github.event.workflow.name }}' -> '${{ github.workflow }}') [on ${{ github.event.workflow_run.event }}: ${{ inputs.branchName == '' && github.event.workflow_run.head_branch || inputs.branchName }}]"
+#run-name: "Release: ('${{ github.event.workflow.name || 'workflow_dispatch' }}' -> '${{ github.workflow }}') [on ${{ github.event.workflow_run.event }}: ${{ github.event.workflow_run.head_branch || inputs.branchName }}] [ref: ${{ github.ref_name }}]"
+#run-name: "${{ github.workflow }}: [from: '${{ github.event.workflow.name || 'workflow_dispatch' }} on: ${{ github.event.workflow_run.event }}'] [version: ${{ github.event.workflow_run.head_branch || inputs.branchName }}] [ref: ${{ github.ref_name }}]"
+run-name: "${{ github.workflow }}: [event: ${{ github.event_name }}] [from: ${{ github.event.workflow.name || 'manual' }}] [on: '${{ github.event.workflow_run.event || 'input' }}': ${{ github.event.workflow_run.head_branch || inputs.branchName }}] [ref: ${{ github.ref_name }}]"
 
 on:
 
@@ -21,8 +21,8 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
-      versionName:
-        description: 'Name of version  (ie v5.5.0) same as tag name'
+      branchName:
+        description: 'Tag name (ie v5.5.0) or branch name'
         required: true
       isDraft:
         description: 'Should we create a draft release?'
@@ -64,10 +64,10 @@ jobs:
           workflow: onpush.yml
           workflow_conclusion: success # for when this is a workflow_dispatch
           github_token: ${{secrets.GITHUB_TOKEN}}
-         # commit: ${{ inputs.versionName }} # TODO: check if this works.
+         # commit: ${{ inputs.branchName }} # TODO: check if this works.
           #run_id: ${{ github.event.workflow_run.id }} # workflow_conclusion is already defined.
           run_number: ${{ github.event.workflow_run.run_number }} # (caller run number) if null, default is to take the last successful run
-          branch: ${{ github.event.workflow_run.head_branch || inputs.versionName }}
+          branch: ${{ github.event.workflow_run.head_branch || inputs.branchName }}
           path: releases
           skip_unpack: true
 
@@ -102,7 +102,7 @@ jobs:
               RELEASE_IS_DRAFT=true
           fi
           if [[ "${{github.event_name}}" == "workflow_dispatch" ]]; then
-              CHECKOUT_TAG=${{ inputs.versionName }}
+              CHECKOUT_TAG=${{ inputs.branchName }}
               RELEASE_IS_DRAFT=${{ inputs.isDraft }}
           fi
           if [[ "$CHECKOUT_TAG" == "" ]]; then
