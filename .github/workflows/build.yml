@@ -131,7 +131,7 @@ jobs:
 
       # This is in a matrix, so only output this info from one OS
       - name: Generate release data using Markdown
-        if: ${{ matrix.os == "ubuntu-latest"}}
+        if: matrix.os == "ubuntu-latest"
         run: |
           echo 'Build from ref: `{{ env.BUILD_REF }}`' >> $GITHUB_STEP_SUMMARY
           echo 'Built version: **{{ env.COMPILED_VERSION }}** `' >> $GITHUB_STEP_SUMMARY
