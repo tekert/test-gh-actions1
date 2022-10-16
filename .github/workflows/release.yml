@@ -100,6 +100,11 @@ jobs:
       - name: Unzip build-data
         run: |
           unzip ./releases/build-data.zip -d ./build-data
+          BUILD_REF << ./build-data/ref
+          COMPILED_VERSION << ./build-data/version
+          DART_POLISHER_BRANCH << ./build-data/dpbranch
+
+          echo "$BUILD_REF"
 
       # steps.create_release.outputs.upload_url   has the URL
       - name: Generate release data using Markdown
