@@ -4,7 +4,7 @@ name: Release
 #run-name: "Release: ('${{ github.event.workflow.name }}' -> '${{ github.workflow }}') [on ${{ github.event.workflow_run.event }}: ${{ inputs.versionName == '' && github.event.workflow_run.head_branch || inputs.versionName }}]"
 #run-name: "Release: ('${{ github.event.workflow.name || 'workflow_dispatch' }}' -> '${{ github.workflow }}') [on ${{ github.event.workflow_run.event }}: ${{ github.event.workflow_run.head_branch || inputs.versionName }}] [ref: ${{ github.ref_name }}]"
 #run-name: "${{ github.workflow }}: [from: '${{ github.event.workflow.name || 'workflow_dispatch' }} on: ${{ github.event.workflow_run.event }}'] [version: ${{ github.event.workflow_run.head_branch || inputs.versionName }}] [ref: ${{ github.ref_name }}]"
-run-name: "${{ github.workflow }}: [event: ${{ github.event_name }}] [from: ${{ github.event.workflow.name || 'dispatch' }}] [on: ${{ github.event.workflow_run.event || 'input' }}: ${{ github.event.workflow_run.head_branch || inputs.versionName }}] [ref: ${{ github.ref_name }}]"
+run-name: "${{ github.workflow }}: [event: ${{ github.event_name }}] [from: ${{ github.event.workflow.name || 'dispatch' }}] [on: '${{ github.event.workflow_run.event || 'input' }}': ${{ github.event.workflow_run.head_branch || inputs.versionName }}] [ref: ${{ github.ref_name }}]"
 
 on:
 
