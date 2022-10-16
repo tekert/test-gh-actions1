@@ -1,5 +1,5 @@
 # (onpush -> build) -> release
-name: onpush
+name: onPush
 
 ###
 #  Builds native executables for [linux,windows,mac] when a semantic release tag is pushed.
