@@ -16,7 +16,8 @@ run-name: "Build ${{ github.repository }} ('${{ github.event.workflow.name }}' -
 
 # Controls when the workflow will run
 on:
-  # {{ github }} context is inherited from caller.
+  # {{ github }} context is inherited from caller (except github.job).
+  # {{ inputs }} too
   workflow_call:
     inputs:
       target:
