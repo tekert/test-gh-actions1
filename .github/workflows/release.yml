@@ -100,6 +100,7 @@ jobs:
       - name: Unzip build-data
         run: |
           unzip ./releases/build-data.zip -d ./build-data
+          rm ./releases/build-data.zip
           BUILD_REF=$(cat ./build-data/ref)
           COMPILED_VERSION=$(cat ./build-data/version)
           DART_POLISHER_BRANCH=$(cat ./build-data/dpbranch)
