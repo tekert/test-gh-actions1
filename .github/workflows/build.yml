@@ -128,8 +128,6 @@ jobs:
           echo 'COMPILED_VERSION<<EOF' >> $GITHUB_ENV
           echo -e 'loooooooooooooooooooooooooooooooooooooong String\nlooooooooooooooooooooooooooooooooong String' >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
-          echo "Built Version:"
-          ./build/${{ matrix.output-name }} --version
         shell: bash
 
 
