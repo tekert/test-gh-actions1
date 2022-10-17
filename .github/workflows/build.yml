@@ -148,9 +148,9 @@ jobs:
           printf 'Compiled version:\n```\n${{ env.COMPILED_VERSION }}\n```\n' >> $GITHUB_STEP_SUMMARY
           echo '' >> $GITHUB_STEP_SUMMARY
           echo '### Workflow' >> $GITHUB_STEP_SUMMARY
-          echo 'Event name: `${{ github.event_name }}` ref_type: `${{ github.ref_type }}`' >> $GITHUB_STEP_SUMMARY
-          echo 'Workflow files ref: `${{ github.ref_type }} : ${{ github.ref }}`' >> $GITHUB_STEP_SUMMARY
+          echo 'Event name: `${{ github.event_name }}`' >> $GITHUB_STEP_SUMMARY
           echo 'Workflow: `build.yml`' >> $GITHUB_STEP_SUMMARY
+          echo 'Workflow files ref: `${{ github.ref_type }} : ${{ github.ref }}`' >> $GITHUB_STEP_SUMMARY
           echo 'Called from workflow: `${{ github.workflow }}`' >> $GITHUB_STEP_SUMMARY
           echo '' >> $GITHUB_STEP_SUMMARY
           echo '### Inputs' >> $GITHUB_STEP_SUMMARY
