@@ -71,9 +71,10 @@ jobs:
         with:
           repository: tekert/test-gh-actions1
           path: formatter_server
-          #ref: master # gets the event ref if this is empty.
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: master # gets the event ref if this is empty.
 
-      # workflow_run | workflow_dispatch : ${{github.event_name}}; workflow_call : ${{(PARENT)github.event_name}};
+           # workflow_run | workflow_dispatch : ${{github.event_name}}; workflow_call : ${{(PARENT)github.event_name}};
       # Means github.event_name on a workflow_call its not an individual event, its the caller event, (its better to just check if the inputs are not null).
       - name: "Setup variables"
         shell: bash
