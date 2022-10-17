@@ -122,6 +122,17 @@ jobs:
         working-directory: formatter_server
 
 
+      - name : "Get built version in a env variable"
+        run: |
+          # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#multiline-strings
+          echo 'COMPILED_VERSION<<EOF' >> $GITHUB_ENV
+          printf "loooooooooooooooooooooooooooooooooooooong String\nlooooooooooooooooooooooooooooooooong String" >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
+          echo "Built Version:"
+          ./build/${{ matrix.output-name }} --version
+        shell: bash
+
+
       # https://github.com/actions/upload-artifact#zipped-artifact-downloads
       - name: "Upload all artifacts"
         uses: actions/upload-artifact@v3.1.0
